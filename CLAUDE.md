@@ -27,7 +27,9 @@
   before merge.
 - The system shall not lower existing test coverage on any pull request.
 - The system shall log all external API calls with request/response status
-  for traceability (yêu cầu audit của khách hàng Nhật).
+  for traceability (yêu cầu audit của khách hàng Nhật). Chi tiết
+  format/level/retention xem `specs/cross-cutting/logging.md`; chiến lược
+  xử lý lỗi và catalog error code xem `specs/cross-cutting/error-handling.md`.
 
 ## 3. Design system (UI)
 
@@ -53,14 +55,20 @@
 
 - The system's specification lives in `specs/` (current truth — trạng thái
   đã chốt, đã merge) and `changes/` (đề xuất/thay đổi đang thực hiện).
+- `specs/` gồm: `vision.md`, `architecture.md`, `data-model.md` (nền tảng —
+  ít đổi), `cross-cutting/` (chính sách áp dụng mọi module — vd
+  error-handling, logging), và `<module>.md` cho từng domain nghiệp vụ.
 - Every change shall be tracked using the ticket ID from Backlog
   (vd: `changes/TICKET-123-add-2fa/`) để trace ngược lại ticket gốc.
 - Every `changes/<ticket-id>/` folder shall contain at minimum
   `delta-spec.md` and `tasks.md`. `proposal.md` and `plan.md` are optional,
   required only for Medium/Large changes (xem mục 6).
 - When a change is merged, its `delta-spec.md` shall be folded into the
-  corresponding file under `specs/`, and the `changes/<ticket-id>/` folder
-  shall be moved to `changes/_archive/`.
+  corresponding file under `specs/`, **creating the file if it does not
+  yet exist** (vd: ticket khởi tạo dự án đầu tiên, khi toàn bộ `specs/`
+  còn rỗng — không có exception riêng, `delta-spec.md` lúc này chỉ toàn
+  mục `(MỚI)`). `changes/<ticket-id>/` sau đó shall be moved to
+  `changes/_archive/`.
 
 ## 5. Quy ước tổ chức UI feature spec
 
@@ -90,7 +98,8 @@
 ## 8. Không được làm gì (Explicit non-goals / cấm)
 
 - The AI agent shall NOT modify files under `specs/` directly without a
-  corresponding entry in `changes/`.
+  corresponding entry in `changes/` — không có ngoại lệ, kể cả ticket
+  khởi tạo dự án đầu tiên (xem mục 4).
 - The AI agent shall NOT invent business requirements not present in
   `proposal.md` / `delta-spec.md` — nếu thiếu thông tin, phải hỏi lại.
 - The AI agent shall NOT delete or rewrite historical folders under

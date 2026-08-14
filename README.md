@@ -2,7 +2,7 @@
 
 Bộ template này kết hợp triết lý **GitHub Spec Kit** (constitution + tách
 business/technical) và **OpenSpec** (current truth `specs/` + delta thay đổi
-`changes/`). 
+`changes/`).
 
 ## Cấu trúc
 
@@ -11,12 +11,17 @@ spec-template/
 ├── CLAUDE.md                      # Nguyên tắc bất biến — sửa ngay khi setup dự án
 ├── DESIGN.md                       # Design system (màu/font/spacing/component) — xem mục riêng bên dưới
 ├── specs/                          # Trạng thái HIỆN TẠI (current truth)
+│   ├── vision.md                   # Bài toán, đối tượng dùng, phạm vi
 │   ├── architecture.md             # Kiến trúc tổng thể
+│   ├── data-model.md               # Entity, quan hệ, ràng buộc dữ liệu
+│   ├── cross-cutting/              # Chính sách áp dụng MỌI module (không thuộc riêng module nào)
+│   │   ├── error-handling.md       #   Chiến lược xử lý lỗi + catalog error code
+│   │   └── logging.md              #   Convention logging: level, format, retention
 │   └── example-module-auth.md      # Ví dụ spec 1 module — copy & đổi tên khi thêm module
 │                                    #   (thêm mục "## UI" hoặc tách file *-ui.md nếu module
 │                                    #    có nhiều màn hình — xem CLAUDE.md mục 5)
 └── changes/
-    ├── _template/                  # Copy thư mục này mỗi khi có ticket mới
+    ├── _template/                  # Copy thư mục này mỗi khi có ticket mới — KỂ CẢ ticket đầu tiên
     │   ├── proposal.md             # Chỉ cần cho size Medium/Large
     │   ├── plan.md                 # Chỉ cần cho size Medium/Large
     │   ├── delta-spec.md           # BẮT BUỘC — mọi size
@@ -24,31 +29,55 @@ spec-template/
     └── _archive/                   # Nơi chứa các change đã merge (lịch sử)
 ```
 
-## Cách bắt đầu 1 dự án mới
+## Nguyên tắc: mọi thay đổi đều qua `changes/`, KHÔNG có ngoại lệ
 
-1. Copy toàn bộ thư mục `spec-template/` vào root repo, đổi tên tuỳ ý (hoặc
-   giữ nguyên cấu trúc con `specs/`, `changes/`, `CLAUDE.md`).
-2. Điền `CLAUDE.md`: tên dự án, stack, nguyên tắc kỹ thuật thật của team.
-3. Điền `specs/architecture.md` với kiến trúc thật (có thể sơ sài lúc đầu,
-   sẽ đầy dần theo thời gian).
-4. Xoá file `specs/example-module-auth.md` mẫu, hoặc giữ lại làm tài liệu
-   tham khảo cách viết.
+Kể cả lúc khởi tạo dự án (khi `specs/` còn hoàn toàn trống), flow vẫn giống
+1 ticket bình thường — chỉ khác là `delta-spec.md` lúc này toàn mục
+`(MỚI)` (vì baseline = rỗng), và size chắc chắn là Large. Xem "Flow cho dự
+án mới hoàn toàn" bên dưới.
 
-## Cách xử lý 1 ticket mới (workflow hàng ngày)
+## Cách xử lý 1 ticket mới — bao gồm cả ticket đầu tiên
 
-1. Nhận ticket từ Backlog, vd `TICKET-123`.
-2. Xác định độ lớn theo bảng trong `CLAUDE.md` mục 4 (Small/Medium/Large).
+1. Nhận ticket từ Backlog (vd `TICKET-1` cho lần khởi tạo, `TICKET-123`
+   cho các lần sau).
+2. Xác định độ lớn theo bảng trong `CLAUDE.md` mục 6 (Small/Medium/Large).
+   Ticket khởi tạo dự án luôn là **Large**.
 3. Copy `changes/_template/` → `changes/TICKET-123-mo-ta-ngan/`.
-4. Nếu Small: chỉ điền `delta-spec.md` + `tasks.md`, xoá `proposal.md` và
-   `plan.md` không dùng.
-   Nếu Medium/Large: điền đủ 4 file, theo thứ tự proposal → plan →
-   delta-spec → tasks.
+4. Viết theo ĐÚNG THỨ TỰ (mỗi file phụ thuộc quyết định của file trước —
+   xem lý do trong `CLAUDE.md` mục 7):
+   - `proposal.md` (Why) → xác nhận trước khi qua bước sau
+   - `plan.md` (kiến trúc/kỹ thuật) → xác nhận trước khi qua bước sau
+   - `delta-spec.md` (requirement cụ thể, EARS notation, đánh dấu
+     `(MỚI)`/`(SỬA)`/`(XOÁ)`) → xác nhận trước khi qua bước sau
+   - `tasks.md` (breakdown để code)
+   Nếu size Small: chỉ cần `delta-spec.md` + `tasks.md`, bỏ qua 2 file đầu
+   và 2 checkpoint đầu.
 5. Đưa cả thư mục `changes/TICKET-123-.../` vào context khi làm việc với
    AI agent (Claude Code/Cursor) cùng với `CLAUDE.md`.
 6. Sau khi code xong, test pass, review xong:
-   - Gộp nội dung `delta-spec.md` vào file tương ứng trong `specs/`.
+   - Gộp nội dung `delta-spec.md` vào file tương ứng trong `specs/`,
+     **tạo file mới nếu chưa tồn tại** (đúng trường hợp ticket đầu tiên).
    - Cập nhật bảng "Lịch sử thay đổi" trong file `specs/` đó.
-   - Di chuyển `changes/SIC_DEV-123-.../` sang `changes/_archive/`.
+   - Di chuyển `changes/TICKET-123-.../` sang `changes/_archive/`.
+
+## Flow cho dự án mới hoàn toàn (lúc `specs/` còn trống)
+
+Vẫn dùng đúng flow ở trên — không có bước riêng. Chỉ khác về nội dung:
+
+```
+Ticket đầu tiên: TICKET-1-project-setup (size Large)
+
+changes/TICKET-1-project-setup/
+├── proposal.md   → Bài toán kinh doanh, phạm vi dự án
+├── plan.md        → Kiến trúc, data model, tech stack đã chọn
+├── delta-spec.md   → TOÀN BỘ requirement ban đầu, tất cả đánh dấu (MỚI):
+│                     [ARCH-01] (MỚI), [AUTH-01] (MỚI), [DM-01] (MỚI)...
+└── tasks.md        → Breakdown build MVP
+
+Merge → fold delta-spec.md vào specs/vision.md, specs/architecture.md,
+specs/data-model.md, specs/<module>.md (tạo mới từng file vì đang rỗng)
+→ archive changes/TICKET-1-project-setup/
+```
 
 ## Cách dùng DESIGN.md (design system)
 
@@ -89,6 +118,15 @@ mức atomic ("nút này trông thế nào"). Layout, trạng thái màn hình
 viết riêng trong `specs/<module>-ui.md` (xem CLAUDE.md mục 5) — hai file
 này bổ sung cho nhau, không thay thế nhau.
 
+## Cross-cutting concern (error handling, logging...)
+
+Những spec dùng chung cho MỌI module (không thuộc riêng module nào) nằm
+trong `specs/cross-cutting/` — phân biệt với `vision.md`/`architecture.md`/
+`data-model.md` (tả **cấu trúc** hệ thống) bằng tiêu chí: cross-cutting tả
+**chính sách hành vi** lặp lại ở mọi nơi (log ra sao, lỗi trả về ra sao).
+Khi thêm error code hoặc đổi convention log, vẫn đi qua `changes/` như mọi
+thay đổi khác — không có exception riêng.
+
 ## Gợi ý dùng với Claude Code / Cursor
 
 - Đặt `CLAUDE.md` và `DESIGN.md` ở root — các tool này tự động đọc 2 file
@@ -96,11 +134,12 @@ này bổ sung cho nhau, không thay thế nhau.
 - Khi bắt đầu 1 task, có thể prompt: *"Đọc changes/TICKET-123-xxx/ và
   specs/auth.md, implement theo delta-spec.md và tasks.md"*.
 - Với Cursor, có thể thêm rule trong `.cursor/rules/spec-workflow.mdc` trỏ
-  về quy tắc trong `CLAUDE.md` mục 6 (không tự sửa `specs/` trực tiếp).
+  về quy tắc trong `CLAUDE.md` mục 8 (không tự sửa `specs/` trực tiếp).
 
 ## Lưu ý quan trọng
 
-- Không sửa `specs/` trực tiếp — mọi thay đổi phải đi qua `changes/` trước.
+- Không sửa `specs/` trực tiếp — mọi thay đổi phải đi qua `changes/`
+  trước, không có ngoại lệ, kể cả lúc `specs/` còn trống.
 - Việc quá nhỏ (fix typo, đổi text) không cần cả bộ này — chỉ áp dụng cho
   thay đổi có ảnh hưởng đến hành vi hệ thống hoặc cần AI agent code theo.
 - Giữ acceptance criteria (EARS notation) đủ cụ thể để map sang test case
