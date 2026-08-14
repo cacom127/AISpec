@@ -1,53 +1,60 @@
-# Data Model — Current Truth
+# Data Model — Tổng quan ER toàn hệ thống
 
-> File này mô tả TRẠNG THÁI HIỆN TẠI đã chốt của data model (entity, quan hệ,
-> ràng buộc dữ liệu). Chỉ cập nhật khi có `changes/<ticket-id>/delta-spec.md`
-> liên quan đến data model được merge — bao gồm cả lần khởi tạo đầu tiên
-> (ticket đầu tiên tạo file này từ rỗng, xem CLAUDE.md mục 4).
+> File này CHỈ giữ bức tranh tổng quan (bảng nào tồn tại, quan hệ với
+> nhau ra sao) + quy ước chung — đúng nghĩa "nền tảng, ít đổi". KHÔNG chứa
+> field/type/constraint chi tiết của từng bảng — phần đó nằm trong
+> `specs/<module>.md` (mục `## Data Model`) của module SỞ HỮU entity đó
+> (xem CLAUDE.md mục 4, quy tắc "1 entity = 1 module sở hữu").
+>
+> File này chỉ cập nhật khi có bảng MỚI xuất hiện hoặc bị xoá, hoặc quan
+> hệ giữa các bảng thay đổi — KHÔNG cập nhật khi chỉ thêm/sửa field.
 
-## 1. Sơ đồ quan hệ (ERD — mức tổng quan)
-
-<Có thể vẽ bằng mermaid nếu tool render được, hoặc ASCII đơn giản>
+## 1. Sơ đồ ER tổng quan (chỉ tên bảng + quan hệ, không có field)
 
 ```mermaid
 erDiagram
     USER ||--o{ SESSION : has
-    USER {
-        uuid id PK
-        string email
-        string role
-    }
-    SESSION {
-        uuid id PK
-        uuid user_id FK
-        datetime expires_at
-    }
+    USER ||--o{ ORDER : places
+    ORDER ||--|{ ORDER_ITEM : contains
 ```
 
-## 2. Danh sách entity chính
+## 2. Bảng entity → module sở hữu
 
-| Entity   | Mô tả                          | Spec hành vi liên quan   |
-|----------|----------------------------------|----------------------------|
-| User     | Người dùng hệ thống              | `specs/auth.md`            |
-| Session  | Phiên đăng nhập                  | `specs/auth.md`            |
-| ...      | ...                                | ...                          |
+> Mỗi entity chỉ có ĐÚNG 1 module sở hữu (nơi field-level schema được
+> định nghĩa). Module khác nếu chỉ tham chiếu (FK) tới entity này thì
+> KHÔNG lặp lại field, chỉ ghi "tham chiếu `<Entity>.id`, xem spec module
+> sở hữu".
 
-## 3. Ràng buộc dữ liệu quan trọng (EARS-style)
+| Entity     | Module sở hữu | Spec chi tiết (field-level)      |
+|------------|----------------|-------------------------------------|
+| User       | auth           | `specs/example-module-auth.md`     |
+| Session    | auth           | `specs/example-module-auth.md`     |
+| Order      | orders         | `specs/orders.md`                   |
+| OrderItem  | orders         | `specs/orders.md`                   |
 
-- **[DM-01]** The `User.email` field shall be unique across the system.
-- **[DM-02]** When a `User` is deleted, the system shall cascade-delete all
-  associated `Session` records.
-- **[DM-03]** The system shall not allow `Session.expires_at` to be set in
-  the past at creation time.
+## 3. Quy ước chung toàn hệ thống (áp dụng mọi bảng)
 
-## 4. Ràng buộc tuân thủ (nếu áp dụng — vd APPI/dữ liệu khách hàng Nhật)
+- **[DM-G01]** The system shall use UUID (v4) as primary key type for
+  every table.
+- **[DM-G02]** Every table shall include `created_at` and `updated_at`
+  (timestamp, auto-managed).
+- **[DM-G03]** Soft-delete tables (nếu có) shall use `deleted_at`
+  (nullable timestamp) thay vì xoá cứng bản ghi.
+- **[DM-G04]** Foreign key column naming convention: `<referenced_table>_id`
+  (vd: `user_id`, không dùng `userId`/`fk_user`).
+
+## 4. Ràng buộc tuân thủ chung (nếu áp dụng — vd APPI)
 
 - <vd: The system shall store all PII fields encrypted at rest.>
-- <vd: The system shall retain audit logs for at least N years theo yêu cầu
+- <vd: The system shall retain audit logs for at least N năm theo yêu cầu
   hợp đồng với khách hàng.>
 
-## 5. Lịch sử thay đổi data model
+## 5. Lịch sử thay đổi (chỉ log khi THÊM/XOÁ bảng hoặc đổi quan hệ)
 
-| Ngày       | Ticket ID           | Thay đổi                              |
-|------------|----------------------|------------------------------------------|
-| YYYY-MM-DD | SIC_DEV-1           | Khởi tạo data model ban đầu (User, Session) |
+| Ngày       | Ticket ID | Thay đổi                                  |
+|------------|-----------|-----------------------------------------------|
+| YYYY-MM-DD | SIC_DEV-1 | Khởi tạo: thêm User, Session                  |
+| YYYY-MM-DD | SIC_DEV-8 | Thêm Order, OrderItem (module orders mới)     |
+
+<!-- Thêm field vào User/Order... KHÔNG log ở đây — xem lịch sử trong
+     specs/<module>.md tương ứng. -->

@@ -13,7 +13,9 @@ spec-template/
 ├── specs/                          # Trạng thái HIỆN TẠI (current truth)
 │   ├── vision.md                   # Bài toán, đối tượng dùng, phạm vi
 │   ├── architecture.md             # Kiến trúc tổng thể
-│   ├── data-model.md               # Entity, quan hệ, ràng buộc dữ liệu
+│   ├── data-model.md               # CHỈ ER tổng quan (tên bảng + quan hệ) + quy ước chung
+│   │                                #   (field-level chi tiết nằm ở specs/<module>.md — xem
+│   │                                #    quy tắc "ownership entity" trong CLAUDE.md mục 4)
 │   ├── cross-cutting/              # Chính sách áp dụng MỌI module (không thuộc riêng module nào)
 │   │   ├── error-handling.md       #   Chiến lược xử lý lỗi + catalog error code
 │   │   └── logging.md              #   Convention logging: level, format, retention
@@ -71,11 +73,14 @@ changes/TICKET-1-project-setup/
 ├── proposal.md   → Bài toán kinh doanh, phạm vi dự án
 ├── plan.md        → Kiến trúc, data model, tech stack đã chọn
 ├── delta-spec.md   → TOÀN BỘ requirement ban đầu, tất cả đánh dấu (MỚI):
-│                     [ARCH-01] (MỚI), [AUTH-01] (MỚI), [DM-01] (MỚI)...
+│                     [ARCH-01] (MỚI), [AUTH-01] (MỚI)...
+│                     Field-level entity map vào specs/<module>.md (mục
+│                     Data Model); quan hệ/tên bảng map vào data-model.md
 └── tasks.md        → Breakdown build MVP
 
 Merge → fold delta-spec.md vào specs/vision.md, specs/architecture.md,
-specs/data-model.md, specs/<module>.md (tạo mới từng file vì đang rỗng)
+specs/<module>.md (field-level, tạo mới từng file vì đang rỗng), và
+specs/data-model.md (chỉ ER tổng quan)
 → archive changes/TICKET-1-project-setup/
 ```
 
