@@ -67,7 +67,7 @@ Quản lý xác thực người dùng và phân quyền truy cập cho toàn h�
 
 | Ngày       | Ticket ID    | Thay đổi                                    |
 |------------|--------------|-----------------------------------------------|
-| YYYY-MM-DD | SIC_DEV-1    | Khởi tạo: entity User/Session, AUTH-01..03    |
-| YYYY-MM-DD | SIC_DEV-XXX  | Thêm AUTH-04 (role-based access control)      |
+| YYYY-MM-DD | TICKET-1    | Khởi tạo: entity User/Session, AUTH-01..03    |
+| YYYY-MM-DD | TICKET-XXX  | Thêm AUTH-04 (role-based access control)      |
 
-<!-- Trỏ về changes/_archive/SIC_DEV-XXX/ để xem đầy đủ proposal/plan gốc -->
+<!-- Trỏ về changes/_archive/TICKET-XXX/ để xem đầy đủ proposal/plan gốc -->

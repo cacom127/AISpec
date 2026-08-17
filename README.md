@@ -19,14 +19,16 @@ spec-template/
 │   ├── cross-cutting/              # Chính sách áp dụng MỌI module (không thuộc riêng module nào)
 │   │   ├── error-handling.md       #   Chiến lược xử lý lỗi + catalog error code
 │   │   └── logging.md              #   Convention logging: level, format, retention
-│   └── example-module-auth.md      # Ví dụ spec 1 module — copy & đổi tên khi thêm module
-│                                    #   (thêm mục "## UI" hoặc tách file *-ui.md nếu module
-│                                    #    có nhiều màn hình — xem CLAUDE.md mục 5)
+│   ├── example-module-auth.md      # Ví dụ spec 1 module — copy & đổi tên khi thêm module
+│   │                                #   (thêm mục "## UI" nếu module đơn giản)
+│   └── example-module-auth-ui.md   # Ví dụ UI feature spec riêng — dùng khi module có
+│                                    #   nhiều màn hình (xem CLAUDE.md mục 5)
 └── changes/
     ├── _template/                  # Copy thư mục này mỗi khi có ticket mới — KỂ CẢ ticket đầu tiên
     │   ├── proposal.md             # Chỉ cần cho size Medium/Large
     │   ├── plan.md                 # Chỉ cần cho size Medium/Large
     │   ├── delta-spec.md           # BẮT BUỘC — mọi size
+    │   ├── ui-delta-spec.md        # OPTIONAL — chỉ khi UI đủ phức tạp để tách riêng
     │   └── tasks.md                # BẮT BUỘC — mọi size
     └── _archive/                   # Nơi chứa các change đã merge (lịch sử)
 ```
@@ -83,6 +85,10 @@ specs/<module>.md (field-level, tạo mới từng file vì đang rỗng), và
 specs/data-model.md (chỉ ER tổng quan)
 → archive changes/TICKET-1-project-setup/
 ```
+
+Nếu công ty bạn chưa tạo Backlog project lúc bắt đầu code (chưa có ticket
+ID thật), tạm dùng `000-init` làm tên thư mục, rồi **rename lại** thành
+ticket ID thật khi archive — chỉ đổi tên, không đổi nội dung/flow.
 
 ## Cách dùng DESIGN.md (design system)
 

@@ -53,8 +53,8 @@ erDiagram
 
 | Ngày       | Ticket ID | Thay đổi                                  |
 |------------|-----------|-----------------------------------------------|
-| YYYY-MM-DD | SIC_DEV-1 | Khởi tạo: thêm User, Session                  |
-| YYYY-MM-DD | SIC_DEV-8 | Thêm Order, OrderItem (module orders mới)     |
+| YYYY-MM-DD | TICKET-1 | Khởi tạo: thêm User, Session                  |
+| YYYY-MM-DD | TICKET-8 | Thêm Order, OrderItem (module orders mới)     |
 
 <!-- Thêm field vào User/Order... KHÔNG log ở đây — xem lịch sử trong
      specs/<module>.md tương ứng. -->
