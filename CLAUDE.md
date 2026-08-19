@@ -81,6 +81,18 @@
   còn rỗng — không có exception riêng, `delta-spec.md` lúc này chỉ toàn
   mục `(MỚI)`). `changes/<ticket-id>/` sau đó shall be moved to
   `changes/_archive/`.
+- **Thay đổi thuần kỹ thuật, không đổi spec** (vd: refactor nội bộ, đổi
+  ORM/thư viện, tối ưu performance mà không đổi behavior/contract nào):
+  `delta-spec.md` vẫn BẮT BUỘC phải tồn tại (không được bỏ qua), nhưng chỉ
+  cần ghi `**Không đổi spec** — lý do: <mô tả>` thay vì liệt kê mục
+  MỚI/SỬA/XOÁ ở mục 1. Không tự ý suy diễn "refactor nên khỏi cần
+  delta-spec" — nếu có bất kỳ thay đổi acceptance criteria nào dù nhỏ,
+  phải quay lại viết đầy đủ mục 1.
+- Trước khi move `changes/<ticket-id>/` sang `changes/_archive/`, AI agent
+  shall verify: (1) mọi checkbox trong `tasks.md` đã tick xong, (2) mọi
+  mục trong `delta-spec.md` đã được fold vào đúng file `specs/` tương ứng
+  (kể cả trường hợp "Không đổi spec" ở trên). Nếu chưa đủ 1 trong 2 điều
+  kiện, KHÔNG được archive.
 
 ## 5. Quy ước tổ chức UI feature spec
 

@@ -9,7 +9,13 @@
 
 - **Ticket ID**: <TICKET-123>
 - **Module bị ảnh hưởng**: `specs/<tên-module>.md`
-- **Loại thay đổi**: ☐ Thêm mới &nbsp; ☐ Sửa &nbsp; ☐ Xoá
+- **Loại thay đổi**: ☐ Thêm mới &nbsp; ☐ Sửa &nbsp; ☐ Xoá &nbsp; ☐ Không đổi spec (refactor thuần)
+
+<!-- Nếu tick "Không đổi spec": xoá mục 1/1b/2 bên dưới, chỉ ghi:
+**Không đổi spec** — lý do: <vd: đổi ORM, tối ưu query, không đổi
+behavior/contract nào>. Xem CLAUDE.md mục 4. Nếu có bất kỳ thay đổi
+acceptance criteria nào dù nhỏ, KHÔNG được tick mục này — phải viết đầy
+đủ mục 1. -->
 
 ## 1. Yêu cầu thay đổi (EARS notation)
 

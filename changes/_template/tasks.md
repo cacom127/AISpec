@@ -17,7 +17,10 @@
 - [ ] **T3** — <vd: "Viết test case cho T1, T2">
       - Liên quan: TC-AUTH-15, TC-AUTH-03
 - [ ] **T4** — Review chéo + cập nhật `specs/<module>.md` khi merge
-- [ ] **T5** — Di chuyển thư mục này vào `changes/_archive/` sau khi merge
+- [ ] **T5** — Verify trước khi archive: tất cả checkbox trên đã tick, và
+      mọi mục trong `delta-spec.md` đã fold vào đúng file `specs/` (xem
+      CLAUDE.md mục 4) — chưa đủ 2 điều kiện thì KHÔNG archive
+- [ ] **T6** — Di chuyển thư mục này vào `changes/_archive/` sau khi merge
 
 ## Trạng thái
 
