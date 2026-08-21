@@ -27,7 +27,7 @@ spec-template/
     ├── _template/                  # Copy thư mục này mỗi khi có ticket mới — KỂ CẢ ticket đầu tiên
     │   ├── proposal.md             # Chỉ cần cho size Medium/Large
     │   ├── plan.md                 # Chỉ cần cho size Medium/Large
-    │   ├── delta-spec.md           # BẮT BUỘC — mọi size
+    │   ├── delta-spec.md           # BẮT BUỘC — mọi size (xem "Các mục trong delta-spec.md" bên dưới)
     │   ├── ui-delta-spec.md        # OPTIONAL — chỉ khi UI đủ phức tạp để tách riêng
     │   └── tasks.md                # BẮT BUỘC — mọi size
     └── _archive/                   # Nơi chứa các change đã merge (lịch sử)
@@ -48,21 +48,55 @@ Kể cả lúc khởi tạo dự án (khi `specs/` còn hoàn toàn trống), fl
    Ticket khởi tạo dự án luôn là **Large**.
 3. Copy `changes/_template/` → `changes/TICKET-123-mo-ta-ngan/`.
 4. Viết theo ĐÚNG THỨ TỰ (mỗi file phụ thuộc quyết định của file trước —
-   xem lý do trong `CLAUDE.md` mục 7):
+   xem lý do trong `docs/design-decisions.md` mục 5):
    - `proposal.md` (Why) → xác nhận trước khi qua bước sau
    - `plan.md` (kiến trúc/kỹ thuật) → xác nhận trước khi qua bước sau
    - `delta-spec.md` (requirement cụ thể, EARS notation, đánh dấu
-     `(MỚI)`/`(SỬA)`/`(XOÁ)`) → xác nhận trước khi qua bước sau
+     `(MỚI)`/`(SỬA)`/`(XOÁ)` — xem "Các mục trong delta-spec.md" bên dưới)
+     → xác nhận trước khi qua bước sau
    - `tasks.md` (breakdown để code)
    Nếu size Small: chỉ cần `delta-spec.md` + `tasks.md`, bỏ qua 2 file đầu
    và 2 checkpoint đầu.
+   Nếu ticket là refactor thuần (không đổi behavior/contract nào):
+   `delta-spec.md` vẫn BẮT BUỘC tồn tại, nhưng mục 1 chỉ cần ghi
+   `**Không đổi spec** — lý do: <mô tả>` (xem `CLAUDE.md` mục 4). Vẫn phải
+   điền mục 1d — refactor là nơi rủi ro vỡ ngầm cao nhất.
 5. Đưa cả thư mục `changes/TICKET-123-.../` vào context khi làm việc với
    AI agent (Claude Code/Cursor) cùng với `CLAUDE.md`.
 6. Sau khi code xong, test pass, review xong:
    - Gộp nội dung `delta-spec.md` vào file tương ứng trong `specs/`,
      **tạo file mới nếu chưa tồn tại** (đúng trường hợp ticket đầu tiên).
+     Mục 1c fold vào `specs/<module>-ui.md`. **Mục 0 và 1d KHÔNG fold** —
+     chúng chỉ có hiệu lực trong phạm vi ticket.
    - Cập nhật bảng "Lịch sử thay đổi" trong file `specs/` đó.
+   - **Verify trước khi archive**: mọi checkbox trong `tasks.md` đã tick
+     xong, VÀ mọi mục cần fold trong `delta-spec.md` đã fold vào đúng file
+     `specs/`. Chưa đủ 2 điều kiện thì KHÔNG được archive (`CLAUDE.md`
+     mục 4).
    - Di chuyển `changes/TICKET-123-.../` sang `changes/_archive/`.
+
+## Các mục trong `delta-spec.md`
+
+| Mục | Khi nào cần | Fold vào `specs/` khi merge? |
+|-----|--------------|-------------------------------|
+| **0. Phân tích bug** | Chỉ khi ticket là fix bug — hành vi hiện tại (đang sai), hành vi mong đợi, nguyên nhân gốc. Phân loại A (code ≠ spec → spec KHÔNG đổi) hoặc B (spec sai/thiếu → phải sửa spec) | ❌ Không — thuộc về ticket |
+| **1. Yêu cầu thay đổi** | Luôn (refactor thuần → chỉ ghi "Không đổi spec") | ✅ `specs/<module>.md` |
+| **1b. Data model** | Khi thêm/sửa field hoặc bảng | ✅ module sở hữu (+ `data-model.md` nếu thêm/xoá bảng hoặc đổi quan hệ) |
+| **1c. Thay đổi UI** | UI đơn giản 1–2 màn hình; phức tạp hơn → tách `ui-delta-spec.md` | ✅ `specs/<module>-ui.md` |
+| **1d. Regression guard** | Khi có (SỬA)/(XOÁ), fix bug, hoặc refactor thuần — liệt kê hành vi KHÔNG được làm vỡ | ❌ Không — hành vi đã có ID gốc trong `specs/` |
+| **2. Test mapping** | Luôn — mỗi ID ↔ ít nhất 1 test case | ❌ Không (nội dung test case nằm ngoài spec) |
+| **3. Ghi chú cho AI agent** | Khi ticket có ràng buộc riêng | ❌ Không |
+| **4. Soát chất lượng** | BẮT BUỘC trước khi chốt | ❌ Không |
+
+Hai quy ước dễ nhầm:
+
+- `shall ...` = cam kết **làm mới** hành vi → map sang test tính năng.
+  `shall CONTINUE TO ...` = cam kết **không làm vỡ** hành vi đang chạy đúng
+  → map sang regression test.
+- Mục 4 soát 5 loại lỗi (mơ hồ / xung đột / thiếu edge case / giả định
+  không nói ra / phạm vi), và phải soát trên **cả requirement cũ** cùng
+  module — xung đột thường nằm giữa dòng vừa thêm và dòng đã có từ trước.
+  AI agent phải **báo cáo và hỏi lại**, không tự sửa requirement.
 
 ## Flow cho dự án mới hoàn toàn (lúc `specs/` còn trống)
 
