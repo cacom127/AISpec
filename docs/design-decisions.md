@@ -237,3 +237,70 @@ thật thì có thể tự động hoá bằng hook.
 
 Nguồn: `openspec validate --archived` (OpenSpec v1.9.0) — cùng mục đích
 "đảm bảo mọi thứ đã archive là hoàn chỉnh".
+
+## 15. Vì sao tách bản brownfield riêng, và vì sao override tối thiểu
+
+### Vì sao không nhồi cả 2 kịch bản vào 1 bộ file
+
+Dự án mới và dự án đang chạy có **luật xung đột trực tiếp**, không phải chỉ
+khác mức độ:
+
+| Luật | Greenfield | Brownfield |
+|---|---|---|
+| `specs/` trống/lỗ chỗ | Chỉ đúng trước ticket đầu tiên | Trạng thái bình thường, lâu dài |
+| Code lệch `DESIGN.md` | Vi phạm, phải sửa | Bình thường trên màn hình cũ |
+| Lint | Bật toàn repo | Chỉ file đã sửa |
+| Hành vi không có trong `specs/` | Không tồn tại | Rất có thể vẫn tồn tại |
+
+Nếu gộp, mỗi luật phải kèm mệnh đề "trừ khi là brownfield thì..." — vừa
+khó đọc, vừa cho phép người ta chọn cách hiểu nào có lợi cho mình. Tách ra
+thì mỗi bản phát biểu dứt khoát, không cần điều kiện.
+
+### Vì sao override tối thiểu, không làm bộ đầy đủ độc lập
+
+Bản brownfield chỉ chứa `CLAUDE.md` + 2 file `specs/` khác biệt; phần còn
+lại dùng chung với root. Cân nhắc đã bỏ: làm `brownfield/` tự chứa đủ 16
+file thì người dùng copy 1 thư mục là xong — tiện hơn.
+
+Bỏ vì **chi phí drift**: mọi cải tiến chung (như 4 mục vừa thêm vào
+`delta-spec.md`) sẽ phải áp 2 lần, và 2 bản sẽ lệch dần. Đó đúng là loại
+vấn đề mà cả repo này tồn tại để chống — chọn tiện lợi ở đây thì tự phản
+lại chính mình.
+
+Kèm 1 quyết định phụ: **giữ nguyên số thứ tự mục** trong
+`brownfield/CLAUDE.md` y như bản gốc, để `diff CLAUDE.md
+brownfield/CLAUDE.md` đọc được và mọi tham chiếu "xem mục N" vẫn đúng ở cả
+2 bản.
+
+### Vì sao chấp nhận `specs/` không bao giờ đầy đủ
+
+Đổi mục tiêu từ *"`specs/` phủ hết code"* sang ***"mọi thay đổi đều có
+spec"***. Cái đầu không bao giờ đạt và không đo được; cái sau giữ được từ
+ngày đầu và đo được (có ticket nào merge mà không ghi nhận phần nó chạm).
+
+Lập luận: giá trị của một trang spec đo bằng số lần nó được đọc để ra quyết
+định. Code không ai chạm thì không ai cần quyết định gì về nó → spec cho nó
+giá trị ~0, nhưng vẫn tốn chi phí bảo trì và rủi ro lệch pha. Spec không ai
+đọc thì không ai phát hiện nó đã sai — nó thành nguồn thông tin SAI, tệ hơn
+là không có gì. Đây cùng một nguyên tắc với mục 3 (tách theo tốc độ đổi):
+spec nên bám vào phần hay đổi.
+
+Ba ngoại lệ phải spec chủ động dù không ai chạm — ghi trong
+`brownfield/specs/_coverage.md`: (1) ràng buộc pháp lý/audit (spec ở đây
+phục vụ trả lời câu hỏi từ bên ngoài, không phục vụ việc code), (2) vùng
+"không ai dám chạm" (phân biệt với "ổn định thật" — hai loại này từ ngoài
+nhìn giống nhau, đều 0 commit, nhưng loại thứ hai là rủi ro cao nhất),
+(3) ngược lại, vùng sắp bị xoá thì đừng spec.
+
+### Vì sao "code là fact" không phá mục 8
+
+`CLAUDE.md` mục 8 cấm AI tự suy diễn requirement. Ở brownfield, AI sẽ chạm
+hành vi chưa có spec liên tục — nếu mỗi lần đều phải hỏi lại thì không làm
+được việc.
+
+Phân biệt: **ghi nhận** hành vi quan sát được trong code KHÔNG phải suy
+diễn — nó là chép lại sự thật. **Phát minh** ra yêu cầu không có trong code
+lẫn trong ticket mới là suy diễn, và vẫn bị cấm. Kèm theo là luật ngược
+chiều quan trọng không kém: AI KHÔNG được xoá một hành vi chỉ vì nó không
+có trong `specs/` — ở brownfield, thiếu spec là chuyện thường, không phải
+bằng chứng hành vi đó dư thừa.

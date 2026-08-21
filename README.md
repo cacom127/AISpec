@@ -4,6 +4,32 @@ Bộ template này kết hợp triết lý **GitHub Spec Kit** (constitution + t
 business/technical) và **OpenSpec** (current truth `specs/` + delta thay đổi
 `changes/`).
 
+## Chọn biến thể trước khi dùng
+
+| Dự án của bạn | Dùng bản nào |
+|---|---|
+| Làm mới từ đầu, chưa có code | **Bản này** (root repo) — đọc tiếp bên dưới |
+| Đã có code chạy, chưa có spec | **`brownfield/`** — đọc `brownfield/README.md` |
+
+```
+brownfield/
+├── README.md                   # flow adoption + luật spec-on-touch
+├── CLAUDE.md                   # override: 3 luật scoped + "code là fact"
+└── specs/
+    ├── _coverage.md            # độ phủ spec theo module
+    └── example-module-auth.md  # có ô "Độ phủ" bắt buộc
+```
+
+Bản brownfield KHÔNG phải bộ file riêng biệt — nó chỉ override `CLAUDE.md`
+và 2 file trong `specs/`, còn lại dùng chung với root (đặc biệt
+`changes/_template/` dùng nguyên vẹn). Nhờ vậy luật chung chỉ sửa 1 lần và
+2 bản không drift; `diff CLAUDE.md brownfield/CLAUDE.md` cho thấy đúng phần
+khác nhau.
+
+Khác biệt cốt lõi: ở bản brownfield, `specs/` được phép trống/lỗ chỗ **có
+chủ đích** và đầy dần theo vùng code bị chạm (spec-on-touch), thay vì viết
+trọn ngay ở ticket đầu tiên như bản này.
+
 ## Cấu trúc
 
 ```
@@ -32,6 +58,9 @@ spec-template/
     │   └── tasks.md                # BẮT BUỘC — mọi size
     └── _archive/                   # Nơi chứa các change đã merge (lịch sử)
 ```
+
+> Ngoài cây trên còn `brownfield/` — bản cho dự án đang chạy, xem mục
+> "Chọn biến thể trước khi dùng" ở trên.
 
 ## Nguyên tắc: mọi thay đổi đều qua `changes/`, KHÔNG có ngoại lệ
 
