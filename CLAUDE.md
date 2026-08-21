@@ -93,6 +93,17 @@
   mục trong `delta-spec.md` đã được fold vào đúng file `specs/` tương ứng
   (kể cả trường hợp "Không đổi spec" ở trên). Nếu chưa đủ 1 trong 2 điều
   kiện, KHÔNG được archive.
+- Mục regression guard (`delta-spec.md` mục 1d) shall NOT be folded into
+  `specs/` khi merge — hành vi được bảo vệ vốn đã tồn tại trong `specs/`
+  dưới ID gốc, viết lại sẽ lặp dữ liệu. Mục này chỉ có hiệu lực trong phạm
+  vi ticket và được archive cùng ticket. Cách viết xem mục 7.
+- **Ticket fix bug**: `delta-spec.md` shall include mục 0 (phân tích bug) —
+  hành vi hiện tại (đang sai), hành vi mong đợi, và nguyên nhân gốc. Bug
+  analysis KHÔNG phải requirement. Mỗi bug shall được phân loại ĐÚNG 1
+  trong 2: (A) code ≠ spec → spec KHÔNG đổi, mục 1 ghi "Không đổi spec";
+  (B) spec sai/thiếu → mục 1 phải có mục (SỬA)/(MỚI) tương ứng. Mục 0
+  KHÔNG fold vào `specs/` (giống mục 1d) — nó thuộc về ticket, không phải
+  current truth.
 
 ## 5. Quy ước tổ chức UI feature spec
 
@@ -106,6 +117,10 @@
   "## 1c" của `delta-spec.md`; thay đổi UI phức tạp (nhiều màn hình) tách
   riêng `ui-delta-spec.md` (optional, xem mẫu trong
   `changes/_template/ui-delta-spec.md`).
+- Khi merge, mục "## 1c" của `delta-spec.md` (và `ui-delta-spec.md` nếu có)
+  shall be folded into `specs/<module>-ui.md`, tạo file mới nếu chưa tồn
+  tại — KHÔNG fold vào `DESIGN.md` (file đó chỉ chứa token/component
+  atomic, không chứa layout/behavior riêng từng ticket).
 - Ảnh/mockup/Figma chỉ là tài liệu tham khảo (mục "Tham chiếu thiết kế"),
   KHÔNG phải nguồn chân lý — nguồn chân lý luôn là nội dung text (EARS +
   state matrix), vì ảnh không diff/trace/test-map được.
@@ -126,6 +141,34 @@
   (unit/integration/manual test theo format Excel test case của dự án).
 - Ambiguous verbs (vd: "nhanh", "thân thiện", "ổn định") shall be replaced
   with measurable criteria (vd: "phản hồi trong < 2s với 100 concurrent user").
+- When a change modifies or removes existing behavior (có mục (SỬA)/(XOÁ)
+  ở `delta-spec.md`, ticket là fix bug, hoặc ticket thuần refactor "Không
+  đổi spec"), the `delta-spec.md` shall declare a regression guard (mục 1d)
+  liệt kê những hành vi hiện có KHÔNG được thay đổi, viết dạng
+  `**[ID] (GIỮ NGUYÊN)** ... the system shall CONTINUE TO ...`.
+- Quy ước phân biệt 2 loại cam kết — để AI agent, dev và tester đọc là
+  biết ngay dòng đó thuộc loại nào:
+  - `shall ...` = cam kết LÀM MỚI hành vi này → map sang test tính năng.
+  - `shall CONTINUE TO ...` = cam kết KHÔNG LÀM VỠ một hành vi đang chạy
+    đúng → map sang regression test.
+- Every `shall CONTINUE TO` line shall be traceable to at least one
+  regression test case (ghi ở mục 2 của `delta-spec.md`).
+- Regression guard shall CHỈ tham chiếu ID requirement đã tồn tại trong
+  `specs/`, KHÔNG lặp lại nội dung requirement, và CHỈ liệt kê requirement
+  dùng chung code path / chung entity với phần đang sửa (thường 2–5 dòng,
+  không liệt kê cả module).
+- Trước khi chốt `delta-spec.md`, the AI agent shall run a requirement
+  quality review (mục 4 của `delta-spec.md`), soát 5 loại lỗi: mơ hồ
+  (ambiguity), xung đột (conflict), thiếu edge case (completeness), giả
+  định không nói ra (unstated assumption), và phạm vi cố ý loại trừ
+  (scenario in/out).
+- Bước soát trên shall chạy trên CẢ requirement mới LẪN requirement cũ
+  cùng module trong `specs/<module>.md` — xung đột thường nằm giữa dòng
+  vừa thêm và dòng đã tồn tại từ trước, không nằm trong dòng mới.
+- Khi bước soát phát hiện vấn đề, the AI agent shall BÁO CÁO và HỎI LẠI
+  người chốt, and shall NOT tự ý sửa nội dung requirement. Mỗi phát hiện
+  shall kết thúc bằng đúng 1 trong 2 kết luận — giữ nguyên, hoặc sửa
+  thành <nội dung mới> — và được ghi vào bảng ở mục 4 để trace khi review.
 
 ## 8. Không được làm gì (Explicit non-goals / cấm)
 

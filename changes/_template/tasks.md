@@ -16,10 +16,14 @@
       - File dự kiến: `src/auth/service.ts`
 - [ ] **T3** — <vd: "Viết test case cho T1, T2">
       - Liên quan: TC-AUTH-15, TC-AUTH-03
+      - Gồm cả regression test cho MỌI dòng ở `delta-spec.md` mục 1d
+      - Nếu là fix bug: viết test TÁI HIỆN bug (phải FAIL trước khi fix)
+        trước khi sửa code
 - [ ] **T4** — Review chéo + cập nhật `specs/<module>.md` khi merge
 - [ ] **T5** — Verify trước khi archive: tất cả checkbox trên đã tick, và
-      mọi mục trong `delta-spec.md` đã fold vào đúng file `specs/` (xem
-      CLAUDE.md mục 4) — chưa đủ 2 điều kiện thì KHÔNG archive
+      mọi mục trong `delta-spec.md` đã fold vào đúng file `specs/` — TRỪ
+      mục 1d (regression guard) không fold (xem CLAUDE.md mục 4) — chưa
+      đủ 2 điều kiện thì KHÔNG archive
 - [ ] **T6** — Di chuyển thư mục này vào `changes/_archive/` sau khi merge
 
 ## Trạng thái
