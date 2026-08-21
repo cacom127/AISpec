@@ -20,7 +20,7 @@ Bản brownfield chỉ override những file THỰC SỰ khác. Khi áp vào d�
 
 | Lấy từ | File |
 |---|---|
-| `brownfield/` | `CLAUDE.md`, `specs/_coverage.md`, `specs/example-module-auth.md` |
+| `brownfield/` | `CLAUDE.md`, `pull_request_template.md`, `specs/_coverage.md`, `specs/example-module-auth.md` |
 | Root repo | `DESIGN.md`, toàn bộ `changes/_template/`, và `specs/` còn lại (`vision.md`, `architecture.md`, `data-model.md`, `cross-cutting/`, `example-module-auth-ui.md`) |
 
 `changes/_template/` dùng chung nguyên vẹn — mục 0/1c/1d/4 hoạt động y như
@@ -84,6 +84,85 @@ Ví dụ, ticket đổi thời gian lock account ở module auth chưa có spec:
 Lưu ý dòng cuối: ở brownfield, mục 1d được phép tham chiếu hành vi **chưa
 có ID trong `specs/`** — lúc đó ghi rõ nguồn là code.
 
+## Dựng gate cho spec-on-touch
+
+Spec-on-touch là **luật duy nhất trong bộ này mà bỏ qua thì không ai biết**.
+Các luật khác lộ ngay khi vi phạm: thiếu file, checkbox chưa tick, bảng test
+trống. Còn để phát hiện ai đó không ghi nhận hành vi có sẵn, người review
+phải biết *code vừa bị chạm đã có spec hay chưa* — mà chính cái đó là thứ
+đang thiếu. Vòng tròn.
+
+Cụ thể: ticket đổi lock account 15 → 30 phút, nếu chỉ ghi `(SỬA) lock 30
+phút` mà bỏ dòng ghi nhận hành vi cũ thì code vẫn đúng, test vẫn pass, PR
+vẫn merge, khách vẫn nhận hàng đúng hạn. **Không có gì báo lỗi.** Sau 50
+ticket như vậy, `specs/` chỉ còn đúng những dòng từng bị sửa, không có ngữ
+cảnh xung quanh — nhưng báo cáo vẫn ghi "đã áp dụng spec-driven".
+
+Đây là dạng luật **chi phí trả ngay, lợi ích thu về sau và thuộc người
+khác**. Loại này không sống được bằng thiện chí — phải có thứ chặn merge.
+
+### 4 mức gate
+
+| Mức | Là gì | Chi phí dựng | Chặn được thật? |
+|---|---|---|---|
+| 1 | PR template có checkbox | ~10 phút | Không — tick bừa được. Nhưng biến "quên" thành "cố tình" và để lại dấu vết |
+| 2 | Reviewer đối chiếu `specs/` bằng tay | 0 (1 dòng vào definition-of-done) | Không — phụ thuộc con người, thường rơi sau vài tuần |
+| 3 | CI check tự động | ~nửa ngày | **Có** |
+| 4 | Hook Claude Code (`settings.json`) | ~1 giờ | Chỉ với AI agent — người sửa tay bằng IDE thì lọt |
+
+**Đừng bật cả 4.** Chúng chồng lên nhau chứ không cộng dồn: có mức 3 rồi thì
+mức 1 và 2 gần như dư, bật thêm chỉ tạo ma sát mà không tăng độ chắc.
+
+### Lộ trình khuyến nghị
+
+- **Ngày 1** → mức **1**: copy `pull_request_template.md` trong thư mục này
+  vào `.github/` (hoặc `.gitlab/merge_request_templates/`) của dự án.
+- **Sau vài tuần**, khi đã có bảng map path → module (chính là
+  `specs/architecture.md` mục 2) → thay bằng mức **3**. Đây mới là gate thật.
+- Mức **2** chỉ để lấp giai đoạn giữa, không phải đích đến.
+- Mức **4** chỉ thêm nếu team dùng AI agent nhiều, và luôn là gate **phụ**.
+
+### Mức 3 — thuật toán CI check
+
+Template không ship script chạy được, vì cần biết CI của dự án (GitHub
+Actions / GitLab CI / Jenkins / Backlog) và cách map path code sang module —
+hai thứ mỗi dự án một khác. Thuật toán để tự implement:
+
+```
+1. changed = danh sách file code bị đổi trong PR
+             (git diff --name-only origin/<default-branch>...HEAD)
+
+2. modules = map mỗi path trong changed sang module
+             (bảng mapping: specs/architecture.md mục 2)
+
+3. delta = changes/<ticket-id>/delta-spec.md
+           (ticket-id suy từ tên branch hoặc PR title)
+
+4. Nếu delta KHÔNG tồn tại
+     -> FAIL: "mọi thay đổi phải có delta-spec"
+
+5. Với mỗi module trong modules:
+     status = trạng thái module đó trong specs/_coverage.md
+     Nếu status thuộc {"Chưa spec", "Một phần"}:
+        Nếu delta không chứa chuỗi "(MỚI — ghi nhận hành vi có sẵn)"
+          -> FAIL: "chạm code chưa có spec mà không ghi nhận hành vi
+                    hiện có — xem brownfield/README.md"
+
+6. Nếu delta có mục (SỬA) hoặc (XOÁ), hoặc PR có nhãn bug/refactor:
+     Nếu delta không có mục "## 1d"
+       -> FAIL: "thiếu regression guard"
+```
+
+Hai lưu ý khi implement:
+
+- **Bước 5 chỉ kiểm sự TỒN TẠI của chuỗi, không kiểm nội dung.** Đây là giới
+  hạn thật và nên biết trước: máy không đánh giá được dòng ghi nhận có đúng
+  và đủ hay không. Phần đó vẫn là việc của reviewer — gate chỉ chặn được
+  trường hợp **bỏ trắng**, mà bỏ trắng lại đúng là ca phổ biến nhất.
+- **Luôn để một đường bypass có dấu vết**: nhãn PR kiểu `skip-spec-gate`
+  kèm lý do bắt buộc. Gate không có đường thoát hợp pháp thì người ta sẽ
+  tìm đường thoát bất hợp pháp — tick sai ở mức 1, hoặc chia nhỏ PR để lách.
+
 ## Vậy `specs/` mãi không đầy đủ — có sao không?
 
 Không sao, và đó là chủ đích. Giá trị của một trang spec đo bằng **số lần
@@ -120,7 +199,7 @@ hợp đồng thì chắc chắn phân kỳ.
 
 | Rủi ro | Cách chặn |
 |---|---|
-| Team không thực sự ghi nhận hành vi khi chạm lần đầu → `specs/` mãi trống, cả bộ này thành thủ tục hình thức | Gate ở PR (checklist hoặc hook) — không trông vào tự giác |
+| Team không thực sự ghi nhận hành vi khi chạm lần đầu → `specs/` mãi trống, cả bộ này thành thủ tục hình thức | Dựng gate — xem mục "Dựng gate cho spec-on-touch". KHÔNG trông vào tự giác |
 | AI agent đọc `specs/` lỗ chỗ rồi tưởng đó là toàn bộ, xoá hành vi "dư thừa" | Ô "Độ phủ" bắt buộc + `CLAUDE.md` mục 8 (cấm xoá hành vi chỉ vì nó không có trong spec) |
 | Ticket toàn bug nhỏ rải rác nhiều module → overhead cảm giác nặng | Chỉ ghi nhận trong bán kính ảnh hưởng, 2–5 dòng |
 | Có người kết luận "template này không dùng được" vì `specs/` lỗ chỗ | Truyền đạt trước: 6–12 tháng đầu lỗ chỗ là ĐÚNG thiết kế, không phải thất bại |

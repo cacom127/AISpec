@@ -13,8 +13,9 @@ business/technical) và **OpenSpec** (current truth `specs/` + delta thay đổi
 
 ```
 brownfield/
-├── README.md                   # flow adoption + luật spec-on-touch
+├── README.md                   # flow adoption + spec-on-touch + dựng gate
 ├── CLAUDE.md                   # override: 3 luật scoped + "code là fact"
+├── pull_request_template.md    # gate mức 1 — copy vào .github/ của dự án
 └── specs/
     ├── _coverage.md            # độ phủ spec theo module
     └── example-module-auth.md  # có ô "Độ phủ" bắt buộc
