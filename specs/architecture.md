@@ -17,17 +17,24 @@ từng service>
 
 ## 2. Danh sách module/domain
 
-| Module      | Vai trò                          | Spec chi tiết                  |
-|-------------|-----------------------------------|---------------------------------|
-| auth        | Xác thực, phân quyền              | `specs/auth.md`                 |
-| inventory   | Quản lý tồn kho / RFID            | `specs/inventory.md`            |
-| ...         | ...                                | ...                              |
+| Module      | Vai trò                  | Spec chi tiết                  |
+|-------------|--------------------------|--------------------------------|
+| auth        | Xác thực, phân quyền     | `specs/example-module-auth.md` |
+| inventory   | Quản lý tồn kho / RFID   | `specs/inventory.md`           |
+| ...         | ...                      | ...                            |
 
 ## 3. Ràng buộc hạ tầng
 
-- Môi trường: AWS (region: <ap-northeast-1>...)
-- Data residency: <tuân thủ APPI — dữ liệu khách hàng Nhật lưu ở đâu>
-- CI/CD: <pipeline gì, gate nào bắt buộc>
+- **[ARCH-01]** The system shall run on AWS, region `<ap-northeast-1>`.
+- **[ARCH-02]** The system shall store toàn bộ dữ liệu khách hàng trong
+  `<Nhật Bản>` để tuân thủ APPI (data residency).
+- **[ARCH-03]** Every pull request shall pass `<lint + unit test + build>`
+  trước khi được merge.
+
+> ID `ARCH-xx` dùng để `delta-spec.md` tham chiếu khi thay đổi ràng buộc
+> kiến trúc (vd "Sửa ARCH-01: thêm region dự phòng"), và để trace ngược từ
+> checklist hạ tầng — cùng quy ước với `AUTH-xx` trong `specs/<module>.md`
+> (xem CLAUDE.md mục 7).
 
 ## 4. Lịch sử thay đổi kiến trúc lớn
 

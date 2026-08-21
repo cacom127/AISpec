@@ -37,7 +37,7 @@
 
 - Component dùng: `input-field`, `button-primary` (xem `DESIGN.md`).
 - Layout: single-column, căn giữa màn hình, max-width 360px (mobile:
-  full width - `spacing.md` padding 2 bên).
+  full width - `{spacing.md}` padding 2 bên).
 
 ### 2.2 Trạng thái màn hình (state matrix)
 

@@ -1,0 +1,9 @@
+# Git lưu LF trong repo, working tree theo convention của OS (Windows: CRLF).
+# Chặn churn diff line-ending khi template được clone trên nhiều OS khác nhau.
+* text=auto
+
+# Nhị phân — không normalize (vd ảnh mockup tham chiếu trong specs/*-ui.md)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

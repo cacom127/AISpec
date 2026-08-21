@@ -18,6 +18,13 @@
 - **Kết hợp**: lấy `CLAUDE.md` (constitution) + tách business/technical
   (proposal/plan) từ Spec Kit; lấy cơ chế delta + `specs/` vs `changes/`
   từ OpenSpec. Điều này giải quyết đúng 2 khuyết điểm của nhau.
+- **Bổ sung sau (Kiro — AWS)**: mục 11–14 dưới đây lấy từ Kiro, chủ yếu là
+  3 thứ OpenSpec/Spec Kit không có: phân hoá spec theo LOẠI công việc
+  (feature / bug / refactor), khai báo hành vi phải giữ nguyên (regression
+  guard), và một bước soát chất lượng requirement có checklist cụ thể.
+  Ngược lại, Kiro KHÔNG tách `specs/` vs `changes/` và không có cơ chế nào
+  chống spec drift sau khi code (issue #2768 của họ bị đóng "not planned",
+  #9435 vẫn mở) — nên phần lõi vẫn giữ theo OpenSpec.
 
 ## 2. Nguyên tắc lõi: KHÔNG CÓ EXCEPTION trong flow `changes/` → `specs/`
 
@@ -127,3 +134,106 @@ proposal.md (Why) → plan.md (giải pháp kỹ thuật) → delta-spec.md
 - Format gồm YAML front matter (token — máy đọc) + markdown body theo
   8 section thứ tự chuẩn (Overview → Colors → Typography → Layout →
   Elevation → Shapes → Components → Do's and Don'ts).
+## 11. Vì sao phân loại thay đổi theo LOẠI, không chỉ theo SIZE
+
+Bảng Change Sizing (`CLAUDE.md` mục 6) phân theo ĐỘ LỚN (Small/Medium/
+Large) — trả lời "cần bao nhiêu file". Nó KHÔNG trả lời "nội dung
+`delta-spec.md` phải có hình dạng gì", trong khi 3 loại việc dưới đây có
+thể cùng size mà cần nội dung khác nhau hẳn:
+
+| Loại việc | Vấn đề nếu dùng chung 1 khuôn |
+|---|---|
+| Feature mới | (khuôn gốc — không có vấn đề) |
+| Refactor thuần | Không có mục MỚI/SỬA/XOÁ nào để ghi → dev/AI kết luận "khỏi cần delta-spec", mất luôn dấu vết thay đổi |
+| Fix bug | Bug analysis (đang sai gì, vì sao) KHÔNG phải requirement; nhồi vào mục 1 làm lẫn giữa "mô tả thực tế" và "cam kết" |
+
+- **Refactor thuần**: giải bằng cách vẫn BẮT `delta-spec.md` phải tồn tại,
+  nhưng cho phép mục 1 chỉ ghi `**Không đổi spec** — lý do: ...`. Chọn
+  cách này thay vì miễn hẳn file, vì miễn hẳn sẽ sinh ra 1 exception —
+  đúng thứ mục 2 ở trên đã quyết định tránh.
+- **Fix bug**: giải bằng mục 0 riêng (hành vi hiện tại / mong đợi /
+  nguyên nhân gốc), và buộc phân loại ĐÚNG 1 trong 2:
+  - **Loại A — code ≠ spec**: spec đang đúng, code làm sai → KHÔNG sửa
+    spec. Nếu không phân biệt, dev hay "sửa spec cho khớp code" — tức là
+    hợp thức hoá cái bug thành yêu cầu.
+  - **Loại B — spec sai/thiếu**: code làm đúng theo spec nhưng spec sai →
+    PHẢI sửa spec; chỉ sửa code thì spec và code lệch nhau ngay.
+
+Nguồn: Kiro có 4 workflow riêng (Spec / Plan / Bug Fix / Quick Spec) và
+dùng `bugfix.md` thay cho `requirements.md` ở ticket bug — cùng lập luận
+"một khuôn không phục vụ được các điểm khởi đầu khác nhau".
+
+## 12. Vì sao regression guard (mục 1d) KHÔNG fold vào `specs/`
+
+Mục 1d liệt kê hành vi mà ticket KHÔNG được làm vỡ, viết dạng
+`[ID] (GIỮ NGUYÊN) ... shall CONTINUE TO ...`.
+
+Câu hỏi khi thiết kế: lúc merge thì fold nó vào `specs/` như mục 1, hay
+không? Quyết định: **KHÔNG**, vì:
+
+- Những hành vi đó ĐÃ nằm trong `specs/` rồi, dưới ID gốc (`AUTH-01`...).
+  Fold vào sẽ tạo bản sao thứ hai của cùng một yêu cầu → đúng loại lặp dữ
+  liệu mà quy tắc ownership (mục 4) tồn tại để tránh.
+- Nó không phải mô tả hệ thống, mà là **ràng buộc phạm vi của 1 ticket**:
+  "lần này đừng chạm vào mấy chỗ này". Hết ticket là hết hiệu lực.
+- Áp đúng nguyên tắc mục 3 (tách theo tốc độ thay đổi): requirement sống
+  vĩnh viễn ở `specs/`; regression guard chết theo ticket, nên nằm trong
+  `changes/<ticket-id>/` và được archive cùng ticket.
+
+Hệ quả kéo theo: cổng verify trước khi archive phải ghi rõ "trừ mục 0 và
+1d" — nếu không, người verify thấy 2 mục chưa fold sẽ tưởng chưa xong.
+
+Vì sao dùng `shall CONTINUE TO` thay vì `shall`: để phân biệt 2 loại cam
+kết mà người đọc / AI / tester cần tách bạch — `shall` = phải LÀM MỚI
+(→ test tính năng), `shall CONTINUE TO` = phải KHÔNG LÀM VỠ (→ regression
+test). Viết `shall` trần thì dev dễ tưởng đây là việc mới cần code thêm.
+
+Nguồn: mục "Unchanged Behavior (Regression Prevention)" trong `bugfix.md`
+của Kiro.
+
+## 13. Vì sao bước soát chất lượng (mục 4) phải quét cả requirement CŨ
+
+`CLAUDE.md` mục 7 từ đầu đã có luật "thay động từ mơ hồ bằng tiêu chí đo
+được". Nhưng đó là LUẬT, không phải QUY TRÌNH — không có bước nào bắt ai
+chạy nó, nên trên thực tế nó chỉ là lời khuyên.
+
+Mục 4 biến luật đó thành checklist 5 loại lỗi phải soát: mơ hồ, xung đột,
+thiếu edge case, giả định không nói ra, phạm vi cố ý loại trừ.
+
+Điểm quan trọng nhất là **phải soát trên cả requirement CŨ cùng module**,
+không chỉ dòng vừa thêm. Lý do: loại lỗi **xung đột** về bản chất không
+nằm trong một dòng nào cả — nó nằm ở QUAN HỆ giữa dòng mới và dòng đã tồn
+tại. Đọc riêng dòng mới thì thấy hoàn toàn hợp lý.
+
+Ví dụ: `specs/example-module-auth.md` đã có `[AUTH-02]` lock account 15
+phút. Ticket mới thêm "user phải login lại được trong vòng 1 phút". Từng
+dòng đều đúng; đứng cạnh nhau thì bất khả thi. Không soát dòng cũ thì phát
+hiện ra ở giai đoạn test — hoặc tệ hơn, khách Nhật phát hiện.
+
+Vì sao AI agent phải BÁO CÁO chứ không tự sửa: quyết định giữ hay đổi một
+requirement là quyết định nghiệp vụ, thuộc người chốt (`CLAUDE.md` mục 9),
+không thuộc AI — đúng tinh thần mục 8 "không tự suy diễn yêu cầu". Mỗi
+phát hiện phải kết thúc bằng đúng 1 trong 2 kết luận (giữ nguyên / sửa
+thành ...) và ghi vào bảng ở mục 4 để trace lại khi review.
+
+Nguồn: bước "Analyze Requirements" của Kiro, kèm cơ chế mỗi phát hiện chỉ
+có 2 lựa chọn trả lời (A = giữ nguyên, B = sửa).
+
+## 14. Vì sao có cổng verify trước khi archive
+
+Archive là hành động MỘT CHIỀU: `changes/<ticket-id>/` rời khỏi vùng đang
+làm, và `CLAUDE.md` mục 8 cấm sửa lại `changes/_archive/`. Nếu archive khi
+chưa fold hết `delta-spec.md` vào `specs/`, hậu quả là `specs/` thiếu
+requirement mà không còn chỗ nào nhắc rằng nó thiếu — spec âm thầm sai, và
+đây đúng kiểu lỗi không ai phát hiện được bằng cách đọc code.
+
+Nên trước khi move phải verify đủ 2 điều kiện: (1) mọi checkbox trong
+`tasks.md` đã tick, (2) mọi mục CẦN fold trong `delta-spec.md` đã fold vào
+đúng file `specs/` — trừ mục 0 và 1d (xem mục 12).
+
+Chọn làm bằng checklist thủ công thay vì script/hook vì repo này là
+template, không ràng buộc vào stack hay CI cụ thể nào. Khi áp vào dự án
+thật thì có thể tự động hoá bằng hook.
+
+Nguồn: `openspec validate --archived` (OpenSpec v1.9.0) — cùng mục đích
+"đảm bảo mọi thứ đã archive là hoàn chỉnh".

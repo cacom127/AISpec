@@ -40,4 +40,4 @@ như thế nào>
 
 | Ngày       | Ticket ID           | Thay đổi                    |
 |------------|----------------------|--------------------------------|
-| YYYY-MM-DD | 000-project-genesis | Khởi tạo vision/requirement ban đầu |
+| YYYY-MM-DD | TICKET-1            | Khởi tạo vision/requirement ban đầu |
