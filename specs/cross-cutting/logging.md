@@ -26,11 +26,11 @@
 }
 ```
 
-- **[LOG-01]** The system shall include `traceId` in every log entry
-  originating from the same request, để trace xuyên suốt qua nhiều
-  service (yêu cầu audit của khách hàng Nhật).
-- **[LOG-02]** The system shall log all external API calls with
-  request/response status for traceability (đối chiếu CLAUDE.md mục 2).
+- **[LOG-01]** Hệ thống shall ghi `traceId` trong mọi log entry phát sinh
+  từ cùng một request, để trace xuyên suốt qua nhiều service (yêu cầu
+  audit của khách hàng Nhật).
+- **[LOG-02]** Hệ thống shall log mọi external API call kèm
+  request/response status để phục vụ truy vết (đối chiếu CLAUDE.md mục 2).
 
 ## 3. Dữ liệu KHÔNG được log (tuân thủ APPI)
 

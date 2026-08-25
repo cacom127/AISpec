@@ -68,17 +68,17 @@ Ví dụ, ticket đổi thời gian lock account ở module auth chưa có spec:
 ```
 ## 1. Yêu cầu thay đổi
 
-- **[AUTH-02] (MỚI — ghi nhận hành vi có sẵn)** When a user fails login 5
-  times within 1 minute, the system shall lock the account for 15 minutes.
+- **[AUTH-02] (MỚI — ghi nhận hành vi có sẵn)** Khi user đăng nhập sai 5
+  lần trong 1 phút, hệ thống shall khoá tài khoản trong 15 phút.
 - **[AUTH-02] (SỬA)**
   - Cũ: lock 15 phút → Mới: lock 30 phút (yêu cầu security audit).
 
 ## 1d. Hành vi KHÔNG được thay đổi (regression guard)
 
-- **[AUTH-01] (GIỮ NGUYÊN)** When a user submits valid credentials, the
-  system shall CONTINUE TO issue a token valid for 8 hours — AUTH-01 CHƯA
-  có trong `specs/`, hành vi này quan sát được trong code (`AuthService`),
-  và ticket này không được làm vỡ.
+- **[AUTH-01] (GIỮ NGUYÊN)** Khi user submit credentials hợp lệ, hệ thống
+  shall CONTINUE TO phát token có hạn 8 tiếng — AUTH-01 CHƯA có trong
+  `specs/`, hành vi này quan sát được trong code (`AuthService`), và
+  ticket này không được làm vỡ.
 ```
 
 Lưu ý dòng cuối: ở brownfield, mục 1d được phép tham chiếu hành vi **chưa

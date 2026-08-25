@@ -17,14 +17,14 @@ Quản lý xác thực người dùng và phân quyền truy cập cho toàn h�
 
 ## 2. Yêu cầu hiện tại (Requirements — EARS notation)
 
-- **[AUTH-01]** When a user submits valid credentials, the system shall
-  issue a session token valid for 8 hours.
-- **[AUTH-02]** When a user fails login 5 times within 1 minute, the
-  system shall lock the account for 15 minutes.
-- **[AUTH-03]** While a session token is expired, the system shall reject
-  all authenticated API requests with HTTP 401.
-- **[AUTH-04]** The system shall support role-based access control with
-  roles: `admin`, `store_staff`, `viewer`.
+- **[AUTH-01]** Khi user submit credentials hợp lệ, hệ thống shall phát
+  session token có hạn 8 tiếng.
+- **[AUTH-02]** Khi user đăng nhập sai 5 lần trong 1 phút, hệ thống shall
+  khoá tài khoản trong 15 phút.
+- **[AUTH-03]** Trong khi session token đã hết hạn, hệ thống shall từ chối
+  mọi API request đã xác thực với HTTP 401.
+- **[AUTH-04]** Hệ thống shall hỗ trợ phân quyền theo role, gồm `admin`,
+  `store_staff`, `viewer`.
 
 > Mỗi ID (AUTH-01, AUTH-02...) dùng để trace từ test case ngược lại yêu cầu,
 > và để `delta-spec.md` tham chiếu khi có thay đổi (vd "Sửa AUTH-02: giảm
@@ -63,12 +63,11 @@ Quản lý xác thực người dùng và phân quyền truy cập cho toàn h�
 
 ### Ràng buộc dữ liệu (EARS notation)
 
-- **[DM-AUTH-01]** The `User.email` field shall be unique across the
-  system.
-- **[DM-AUTH-02]** When a `User` is deleted, the system shall
-  cascade-delete all associated `Session` records.
-- **[DM-AUTH-03]** The system shall not allow `Session.expires_at` to be
-  set in the past at creation time.
+- **[DM-AUTH-01]** Field `User.email` shall là duy nhất trên toàn hệ thống.
+- **[DM-AUTH-02]** Khi một `User` bị xoá, hệ thống shall cascade-delete
+  mọi bản ghi `Session` liên quan.
+- **[DM-AUTH-03]** Hệ thống shall NOT cho phép `Session.expires_at` được
+  set vào thời điểm trong quá khứ lúc tạo bản ghi.
 
 ## 5. UI (tuỳ chọn — nếu module đơn giản, không cần tách file *-ui.md riêng)
 

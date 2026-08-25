@@ -25,10 +25,10 @@ từng service>
 
 ## 3. Ràng buộc hạ tầng
 
-- **[ARCH-01]** The system shall run on AWS, region `<ap-northeast-1>`.
-- **[ARCH-02]** The system shall store toàn bộ dữ liệu khách hàng trong
+- **[ARCH-01]** Hệ thống shall chạy trên AWS, region `<ap-northeast-1>`.
+- **[ARCH-02]** Hệ thống shall lưu toàn bộ dữ liệu khách hàng trong
   `<Nhật Bản>` để tuân thủ APPI (data residency).
-- **[ARCH-03]** Every pull request shall pass `<lint + unit test + build>`
+- **[ARCH-03]** Mọi pull request shall pass `<lint + unit test + build>`
   trước khi được merge.
 
 > ID `ARCH-xx` dùng để `delta-spec.md` tham chiếu khi thay đổi ràng buộc

@@ -28,14 +28,14 @@
 
 ## 2. Quy ước chung (áp dụng mọi endpoint)
 
-- **[API-G01]** Every endpoint path shall dùng kebab-case và danh từ số
+- **[API-G01]** Mọi endpoint path shall dùng kebab-case và danh từ số
   nhiều cho collection (vd `/orders`, KHÔNG `/getOrder`).
-- **[API-G02]** Every authenticated endpoint shall nhận token qua header
+- **[API-G02]** Mọi endpoint cần xác thực shall nhận token qua header
   `Authorization: Bearer <token>`.
-- **[API-G03]** When a request fails, the system shall trả error code theo
-  catalog trong `specs/cross-cutting/error-handling.md` — KHÔNG tự định
-  nghĩa format lỗi riêng cho từng endpoint.
-- **[API-G04]** Every list endpoint shall hỗ trợ phân trang qua
+- **[API-G03]** Khi một request thất bại, hệ thống shall trả error code
+  theo catalog trong `specs/cross-cutting/error-handling.md` — KHÔNG tự
+  định nghĩa format lỗi riêng cho từng endpoint.
+- **[API-G04]** Mọi endpoint dạng list shall hỗ trợ phân trang qua
   `?page=&per_page=`, mặc định `per_page=<N>`, tối đa `<M>`.
 - **[API-G05]** Breaking change trên endpoint đã release shall được phát
   hành dưới path version mới (`/v2/...`), KHÔNG sửa tại chỗ.

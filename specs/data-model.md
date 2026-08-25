@@ -34,20 +34,20 @@ erDiagram
 
 ## 3. Quy ước chung toàn hệ thống (áp dụng mọi bảng)
 
-- **[DM-G01]** The system shall use UUID (v4) as primary key type for
-  every table.
-- **[DM-G02]** Every table shall include `created_at` and `updated_at`
-  (timestamp, auto-managed).
-- **[DM-G03]** Soft-delete tables (nếu có) shall use `deleted_at`
-  (nullable timestamp) thay vì xoá cứng bản ghi.
-- **[DM-G04]** Foreign key column naming convention: `<referenced_table>_id`
-  (vd: `user_id`, không dùng `userId`/`fk_user`).
+- **[DM-G01]** Hệ thống shall dùng UUID (v4) làm kiểu primary key cho mọi
+  bảng.
+- **[DM-G02]** Mọi bảng shall có `created_at` và `updated_at` (timestamp,
+  tự động quản lý).
+- **[DM-G03]** Bảng soft-delete (nếu có) shall dùng `deleted_at` (nullable
+  timestamp) thay vì xoá cứng bản ghi.
+- **[DM-G04]** Cột foreign key shall đặt tên theo `<referenced_table>_id`
+  (vd `user_id`, không dùng `userId`/`fk_user`).
 
 ## 4. Ràng buộc tuân thủ chung (nếu áp dụng — vd APPI)
 
-- <vd: The system shall store all PII fields encrypted at rest.>
-- <vd: The system shall retain audit logs for at least N năm theo yêu cầu
-  hợp đồng với khách hàng.>
+- <vd: Hệ thống shall lưu mọi field PII ở dạng mã hoá at rest.>
+- <vd: Hệ thống shall giữ audit log tối thiểu N năm theo yêu cầu hợp đồng
+  với khách hàng.>
 
 ## 5. Lịch sử thay đổi (chỉ log khi THÊM/XOÁ bảng hoặc đổi quan hệ)
 

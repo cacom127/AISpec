@@ -34,8 +34,8 @@
 
 ## 4. Hành vi tương tác (EARS — đánh dấu MỚI/SỬA/XOÁ)
 
-- **[UI-AUTH-05-1] (MỚI)** When user nhấn "Gửi link" với email hợp lệ
-  format, the system shall hiện trạng thái "Đang gửi" và gọi API
+- **[UI-AUTH-05-1] (MỚI)** Khi user nhấn "Gửi link" với email hợp lệ
+  format, hệ thống shall hiện trạng thái "Đang gửi" và gọi API
   `POST /auth/reset-password`.
 
 ## 5. Test mapping

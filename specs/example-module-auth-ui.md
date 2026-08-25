@@ -55,20 +55,20 @@
 
 ### 2.3 Hành vi tương tác (EARS)
 
-- **[UI-AUTH-01-1]** When user nhấn "Đăng nhập" với email/password hợp
-  lệ, the system shall chuyển sang trạng thái "Đang submit" và gọi API
+- **[UI-AUTH-01-1]** Khi user nhấn "Đăng nhập" với email/password hợp lệ,
+  hệ thống shall chuyển sang trạng thái "Đang submit" và gọi API
   `POST /auth/login`.
-- **[UI-AUTH-01-2]** When API trả về lỗi `AUTH_001`, the system shall
-  hiện lỗi dưới password field, KHÔNG xoá nội dung email đã nhập.
-- **[UI-AUTH-01-3]** When API trả về lỗi `AUTH_002` (account locked), the
-  system shall chuyển sang state "Account Locked" (mục 4), không hiện lỗi
+- **[UI-AUTH-01-2]** Khi API trả về lỗi `AUTH_001`, hệ thống shall hiện
+  lỗi dưới password field, KHÔNG xoá nội dung email đã nhập.
+- **[UI-AUTH-01-3]** Khi API trả về lỗi `AUTH_002` (account locked), hệ
+  thống shall chuyển sang state "Account Locked" (mục 4), không hiện lỗi
   dạng text thông thường.
-- **[UI-AUTH-01-4]** While đang ở trạng thái "Đang submit", the system
+- **[UI-AUTH-01-4]** Trong khi đang ở trạng thái "Đang submit", hệ thống
   shall disable toàn bộ input field để tránh sửa trong lúc chờ.
-- **[UI-AUTH-01-5]** When API `POST /auth/login` trả về thành công, the
-  system shall điều hướng sang màn hình **Home** (thuộc module
-  `inventory` — xem `specs/inventory-ui.md`).
-- **[UI-AUTH-01-6]** When user nhấn "Quên mật khẩu?", the system shall
+- **[UI-AUTH-01-5]** Khi API `POST /auth/login` trả về thành công, hệ thống
+  shall điều hướng sang màn hình **Home** (thuộc module `inventory` — xem
+  `specs/inventory-ui.md`).
+- **[UI-AUTH-01-6]** Khi user nhấn "Quên mật khẩu?", hệ thống shall
   điều hướng sang màn hình **Reset Password**.
 
 ---
@@ -98,14 +98,14 @@
 
 ### 3.3 Hành vi tương tác (EARS)
 
-- **[UI-AUTH-05-1]** When user nhấn "Gửi link" với email hợp lệ format,
-  the system shall hiện trạng thái "Đang gửi" và gọi API
+- **[UI-AUTH-05-1]** Khi user nhấn "Gửi link" với email hợp lệ format, hệ
+  thống shall hiện trạng thái "Đang gửi" và gọi API
   `POST /auth/reset-password`.
-- **[UI-AUTH-05-2]** When API trả về thành công, the system shall hiện
-  toast thành công và sau 2 giây tự động điều hướng sang màn hình **Login**.
-- **[UI-AUTH-05-3]** When API trả lỗi `AUTH_003`, the system shall hiện
-  lỗi ngay dưới field email, KHÔNG hiện toast.
-- **[UI-AUTH-05-4]** When user nhấn "Quay lại đăng nhập", the system shall
+- **[UI-AUTH-05-2]** Khi API trả về thành công, hệ thống shall hiện toast
+  thành công và sau 2 giây tự động điều hướng sang màn hình **Login**.
+- **[UI-AUTH-05-3]** Khi API trả lỗi `AUTH_003`, hệ thống shall hiện lỗi
+  ngay dưới field email, KHÔNG hiện toast.
+- **[UI-AUTH-05-4]** Khi user nhấn "Quay lại đăng nhập", hệ thống shall
   điều hướng sang màn hình **Login**.
 
 ---
@@ -124,7 +124,7 @@
 
 ### 4.2 Hành vi tương tác (EARS)
 
-- **[UI-AUTH-02-1]** While tài khoản đang ở trạng thái locked, the system
+- **[UI-AUTH-02-1]** Trong khi tài khoản đang ở trạng thái locked, hệ thống
   shall disable nút "Đăng nhập" trên màn hình Login.
 
 ---

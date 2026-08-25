@@ -38,14 +38,14 @@ acceptance criteria nào dù nhỏ, KHÔNG được tick mục này — phải v
 ### 0a. Hành vi hiện tại (đang sai)
 
 <!-- KHÔNG dùng "shall" ở đây — đây là mô tả thực tế, không phải cam kết -->
-- When a user logs in successfully after 2 failed attempts, the system
-  **does not reset the failed-attempt counter** — lần sai thứ 3 (dù cách
-  đó vài giờ) vẫn làm account bị lock.
+- Khi user đăng nhập thành công sau 2 lần sai, hệ thống **không reset bộ
+  đếm số lần sai** — lần sai thứ 3 (dù cách đó vài giờ) vẫn làm account
+  bị lock.
 
 ### 0b. Hành vi mong đợi (đúng)
 
-- When a user submits valid credentials, the system shall reset the
-  failed-attempt counter to 0.
+- Khi user submit credentials hợp lệ, hệ thống shall reset bộ đếm số lần
+  đăng nhập sai về 0.
 
 <!-- Loại B: dòng trên PHẢI xuất hiện lại ở mục 1 dưới dạng (SỬA)/(MỚI).
      Loại A: dòng trên chỉ diễn giải requirement đã có, KHÔNG thêm ID mới. -->
@@ -61,8 +61,8 @@ acceptance criteria nào dù nhỏ, KHÔNG được tick mục này — phải v
 ## 1. Yêu cầu thay đổi (EARS notation)
 
 <!-- Nếu THÊM mới, đánh số tiếp theo ID cuối cùng trong specs/<module>.md -->
-- **[AUTH-05] (MỚI)** When a user requests password reset, the system
-  shall send a one-time link valid for 30 minutes.
+- **[AUTH-05] (MỚI)** Khi user yêu cầu đặt lại mật khẩu, hệ thống shall
+  gửi link dùng một lần, hiệu lực 30 phút.
 
 <!-- Nếu SỬA, ghi rõ ID cũ và nội dung cũ/mới -->
 - **[AUTH-02] (SỬA)**
@@ -107,9 +107,9 @@ acceptance criteria nào dù nhỏ, KHÔNG được tick mục này — phải v
 - **Màn hình bị ảnh hưởng**: <vd: Login (SỬA — thêm state "Account Locked")>
 
 <!-- Hành vi tương tác, EARS, đánh dấu MỚI/SỬA/XOÁ giống mục 1 -->
-- **[UI-AUTH-02-1] (MỚI)** While tài khoản đang ở trạng thái locked, the
-  system shall hiện banner cảnh báo trên màn hình Login kèm thời gian còn
-  lại, và disable nút "Đăng nhập".
+- **[UI-AUTH-02-1] (MỚI)** Trong khi tài khoản đang ở trạng thái locked,
+  hệ thống shall hiện banner cảnh báo trên màn hình Login kèm thời gian
+  còn lại, và disable nút "Đăng nhập".
 
 - **Thay đổi design token trong `DESIGN.md`**: <"Không đổi" — hoặc liệt kê
   token thêm/sửa. BẮT BUỘC ghi nếu ticket sửa `DESIGN.md` và ảnh hưởng
@@ -137,13 +137,13 @@ acceptance criteria nào dù nhỏ, KHÔNG được tick mục này — phải v
 >   guard chỉ có hiệu lực trong phạm vi ticket và được archive cùng ticket.
 
 <!-- Ví dụ: ticket giảm ngưỡng lock account từ 5 lần xuống 3 lần (AUTH-02) -->
-- **[AUTH-02] (GIỮ NGUYÊN)** When an account is locked, the system shall
-  CONTINUE TO keep it locked for exactly 15 minutes — ticket này CHỈ đổi
-  ngưỡng số lần thử, KHÔNG đổi thời gian lock.
-- **[AUTH-01] (GIỮ NGUYÊN)** When a user submits valid credentials, the
-  system shall CONTINUE TO issue a token valid for 8 hours, và bộ đếm số
-  lần sai shall CONTINUE TO reset về 0 — việc đổi cách đếm không được ảnh
-  hưởng luồng login thành công.
+- **[AUTH-02] (GIỮ NGUYÊN)** Khi tài khoản bị khoá, hệ thống shall
+  CONTINUE TO giữ khoá đúng 15 phút — ticket này CHỈ đổi ngưỡng số lần
+  thử, KHÔNG đổi thời gian lock.
+- **[AUTH-01] (GIỮ NGUYÊN)** Khi user submit credentials hợp lệ, hệ thống
+  shall CONTINUE TO phát token có hạn 8 tiếng, và bộ đếm số lần sai shall
+  CONTINUE TO reset về 0 — việc đổi cách đếm không được ảnh hưởng luồng
+  login thành công.
 
 <!-- Nếu ticket chỉ toàn mục (MỚI), không đụng code path nào đang chạy:
      ghi "Không có — ticket chỉ thêm mới, không sửa hành vi hiện có." -->

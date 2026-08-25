@@ -6,18 +6,16 @@
 
 ## 1. Chiến lược xử lý lỗi (EARS notation)
 
-- **[ERR-01]** When an unhandled exception occurs, the system shall
-  return HTTP 500 with a generic message ("Đã có lỗi xảy ra, vui lòng thử
-  lại"), and log full stack trace internally — KHÔNG trả stack trace ra
-  client.
-- **[ERR-02]** When input validation fails, the system shall return
-  HTTP 400 with an error code từ catalog (mục 2) kèm message song ngữ.
-- **[ERR-03]** When an external API call (3rd-party) fails, the system
-  shall retry tối đa 3 lần với exponential backoff trước khi trả lỗi cho
-  client.
-- **[ERR-04]** While a known business-rule violation occurs (vd: tồn kho
-  không đủ), the system shall return HTTP 409 với error code cụ thể,
-  không dùng HTTP 500.
+- **[ERR-01]** Khi có exception không được handle, hệ thống shall trả
+  HTTP 500 với message chung ("Đã có lỗi xảy ra, vui lòng thử lại"), và
+  log full stack trace ở nội bộ — KHÔNG trả stack trace ra client.
+- **[ERR-02]** Khi validate input thất bại, hệ thống shall trả HTTP 400
+  với error code từ catalog (mục 2) kèm message song ngữ.
+- **[ERR-03]** Khi gọi external API (3rd-party) thất bại, hệ thống shall
+  retry tối đa 3 lần với exponential backoff trước khi trả lỗi cho client.
+- **[ERR-04]** Trong khi có vi phạm business rule đã biết (vd tồn kho
+  không đủ), hệ thống shall trả HTTP 409 với error code cụ thể, KHÔNG
+  dùng HTTP 500.
 
 ## 2. Catalog error code
 
