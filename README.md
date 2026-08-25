@@ -37,12 +37,17 @@ trọn ngay ở ticket đầu tiên như bản này.
 spec-template/
 ├── CLAUDE.md                      # Nguyên tắc bất biến — sửa ngay khi setup dự án
 ├── DESIGN.md                       # Design system (màu/font/spacing/component) — xem mục riêng bên dưới
+├── docs/                           # KHÔNG phải spec — không fold, không qua changes/
+│   └── design-decisions.md         #   Lập luận dẫn tới cấu trúc hiện tại
 ├── specs/                          # Trạng thái HIỆN TẠI (current truth)
 │   ├── vision.md                   # Bài toán, đối tượng dùng, phạm vi
 │   ├── architecture.md             # Kiến trúc tổng thể
 │   ├── data-model.md               # CHỈ ER tổng quan (tên bảng + quan hệ) + quy ước chung
 │   │                                #   (field-level chi tiết nằm ở specs/<module>.md — xem
 │   │                                #    quy tắc "ownership entity" trong CLAUDE.md mục 4)
+│   ├── api-catalog.md              # CHỈ danh sách endpoint + quy ước chung
+│   │                                #   (schema chi tiết nằm ở module sở hữu — xem
+│   │                                #    quy tắc "ownership endpoint" trong CLAUDE.md mục 4)
 │   ├── cross-cutting/              # Chính sách áp dụng MỌI module (không thuộc riêng module nào)
 │   │   ├── error-handling.md       #   Chiến lược xử lý lỗi + catalog error code
 │   │   └── logging.md              #   Convention logging: level, format, retention

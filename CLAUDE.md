@@ -57,15 +57,22 @@
   đã chốt, đã merge) and `changes/` (đề xuất/thay đổi đang thực hiện).
 - `specs/` gồm: `vision.md`, `architecture.md` (nền tảng — ít đổi),
   `data-model.md` (**CHỈ** ER tổng quan + quy ước chung — ít đổi, KHÔNG
-  chứa field-level chi tiết), `cross-cutting/` (chính sách áp dụng mọi
-  module — vd error-handling, logging), và `<module>.md` cho từng domain
-  nghiệp vụ.
+  chứa field-level chi tiết), `api-catalog.md` (**CHỈ** danh sách endpoint
+  + quy ước chung — KHÔNG chứa schema chi tiết), `cross-cutting/` (chính
+  sách áp dụng mọi module — vd error-handling, logging), và `<module>.md`
+  cho từng domain nghiệp vụ.
 - **Quy tắc ownership entity**: mỗi entity/bảng dữ liệu shall có ĐÚNG 1
   module sở hữu. Field/type/constraint chi tiết của entity đó được viết
   trong `specs/<module-sở-hữu>.md` (mục `## Data Model`), KHÔNG viết trong
   `specs/data-model.md`. `specs/data-model.md` chỉ ghi tên bảng, quan hệ,
   và bảng mapping entity → module sở hữu. Module khác nếu chỉ tham chiếu
   (FK) tới entity đó thì KHÔNG lặp lại field, chỉ ghi chú tham chiếu.
+- **Quy tắc ownership endpoint**: mỗi API endpoint shall có ĐÚNG 1 module
+  sở hữu. Request/response schema chi tiết được viết trong
+  `specs/<module-sở-hữu>.md`, KHÔNG viết trong `specs/api-catalog.md` —
+  file này chỉ giữ 1 dòng/endpoint (method, path, module sở hữu). Module
+  khác nếu chỉ GỌI endpoint đó thì KHÔNG lặp lại schema, chỉ ghi chú tham
+  chiếu.
 - Khi 1 thay đổi chỉ thêm/sửa field của 1 entity đã tồn tại → chỉ động vào
   `specs/<module-sở-hữu>.md`, KHÔNG động vào `specs/data-model.md`. Chỉ
   khi THÊM/XOÁ hẳn 1 bảng, hoặc thay đổi quan hệ giữa các bảng, mới cần
@@ -113,6 +120,15 @@
   `specs/<module>.md` nếu module chỉ có 1 màn hình đơn giản.
 - UI feature spec tham chiếu ngược lại token trong `DESIGN.md`, không lặp
   lại giá trị màu/font cụ thể — chỉ ghi tên component/token.
+- Mọi ĐIỀU HƯỚNG giữa các màn hình shall được viết thành 1 dòng EARS trong
+  `specs/<module>-ui.md`, KHÔNG được chỉ nằm trong ASCII layout hoặc ảnh
+  mockup — layout/ảnh không phải nguồn chân lý (xem `docs/design-decisions.md`
+  mục 6). Dòng EARS shall ghi rõ MÀN HÌNH ĐÍCH.
+- Nếu màn hình đích thuộc module khác, dòng EARS shall ghi thêm tên module
+  đó. **Module chứa màn hình NGUỒN sở hữu cạnh điều hướng** — module đích
+  KHÔNG lặp lại. Nhờ 2 luật này, 画面遷移図 suy ra được trực tiếp từ
+  `specs/<module>-ui.md` (node = bảng danh sách màn hình, edge = các dòng
+  điều hướng), không cần file sơ đồ riêng.
 - Trong `changes/<ticket-id>/`: thay đổi UI đơn giản ghi thẳng vào mục
   "## 1c" của `delta-spec.md`; thay đổi UI phức tạp (nhiều màn hình) tách
   riêng `ui-delta-spec.md` (optional, xem mẫu trong

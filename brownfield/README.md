@@ -21,7 +21,7 @@ Bản brownfield chỉ override những file THỰC SỰ khác. Khi áp vào d�
 | Lấy từ | File |
 |---|---|
 | `brownfield/` | `CLAUDE.md`, `pull_request_template.md`, `specs/_coverage.md`, `specs/example-module-auth.md` |
-| Root repo | `DESIGN.md`, toàn bộ `changes/_template/`, và `specs/` còn lại (`vision.md`, `architecture.md`, `data-model.md`, `cross-cutting/`, `example-module-auth-ui.md`) |
+| Root repo | `DESIGN.md`, toàn bộ `changes/_template/`, và `specs/` còn lại (`vision.md`, `architecture.md`, `data-model.md`, `api-catalog.md`, `cross-cutting/`, `example-module-auth-ui.md`) |
 
 `changes/_template/` dùng chung nguyên vẹn — mục 0/1c/1d/4 hoạt động y như
 nhau. Riêng mục **1d (regression guard)** còn quan trọng hơn ở brownfield,

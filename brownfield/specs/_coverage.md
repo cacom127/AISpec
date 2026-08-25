@@ -21,6 +21,20 @@
 | billing | Cố ý không spec | Sắp thay bằng SaaS ngoài trong <Qx/YYYY> — spec viết ra sẽ bỏ đi |
 | legacy-report | Cố ý không spec | Read-only, không còn yêu cầu mới. Nếu buộc phải sửa thì spec TRƯỚC (xem mục 2) |
 
+## 1b. Độ phủ API catalog
+
+> `specs/api-catalog.md` ở dự án brownfield cũng lỗ chỗ như `specs/` — nó
+> đầy dần theo endpoint bị chạm. **Rủi ro riêng**: chữ 一覧 nghĩa là liệt kê
+> đầy đủ, nên trình khách một catalog 3 endpoint cho hệ thống có 200
+> endpoint là sai lệch nghiêm trọng hơn không trình.
+
+- **Độ phủ hiện tại**: <vd: 12/~200 endpoint — chỉ những cái đã đi qua `changes/`>
+- **Nguồn để dò cho đủ khi cần giao 一覧**: route file/annotation trong code,
+  log gateway, spec Swagger/OpenAPI cũ nếu có
+- Trước khi giao cho khách, BẮT BUỘC chạy checklist ở `specs/api-catalog.md`
+  mục 3 — đặc biệt các endpoint KHÔNG do UI gọi (batch/cron, webhook,
+  service-to-service), vì chúng không xuất hiện trong `*-ui.md` nào
+
 ## 2. Vùng "không ai chạm" — phân biệt 2 loại
 
 > Code không bị chạm có 2 lý do rất khác nhau, mà từ ngoài nhìn giống nhau

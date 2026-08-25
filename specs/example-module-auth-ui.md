@@ -17,6 +17,11 @@
 | Reset Password    | `/reset-password`        | Gửi link/OTP đặt lại mật khẩu        |
 | Account Locked    | (modal/toast trên Login) | Thông báo khi tài khoản bị khoá      |
 
+> **画面遷移図 suy ra từ file này**, không lưu sơ đồ riêng để tránh lặp dữ
+> liệu: **node** = bảng trên, **edge** = các dòng EARS có cụm *"điều hướng
+> sang màn hình X"* ở mục 2.3 / 3.3 / 4.2. Giữ đúng cụm từ đó để trích tự
+> động được (grep/AI sinh mermaid). Xem `CLAUDE.md` mục 5.
+
 ---
 
 ## 2. Màn hình: Login
@@ -60,6 +65,11 @@
   dạng text thông thường.
 - **[UI-AUTH-01-4]** While đang ở trạng thái "Đang submit", the system
   shall disable toàn bộ input field để tránh sửa trong lúc chờ.
+- **[UI-AUTH-01-5]** When API `POST /auth/login` trả về thành công, the
+  system shall điều hướng sang màn hình **Home** (thuộc module
+  `inventory` — xem `specs/inventory-ui.md`).
+- **[UI-AUTH-01-6]** When user nhấn "Quên mật khẩu?", the system shall
+  điều hướng sang màn hình **Reset Password**.
 
 ---
 
@@ -92,9 +102,11 @@
   the system shall hiện trạng thái "Đang gửi" và gọi API
   `POST /auth/reset-password`.
 - **[UI-AUTH-05-2]** When API trả về thành công, the system shall hiện
-  toast thành công và tự động quay về màn hình Login sau 2 giây.
+  toast thành công và sau 2 giây tự động điều hướng sang màn hình **Login**.
 - **[UI-AUTH-05-3]** When API trả lỗi `AUTH_003`, the system shall hiện
   lỗi ngay dưới field email, KHÔNG hiện toast.
+- **[UI-AUTH-05-4]** When user nhấn "Quay lại đăng nhập", the system shall
+  điều hướng sang màn hình **Login**.
 
 ---
 

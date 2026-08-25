@@ -20,6 +20,7 @@
       - Nếu là fix bug: viết test TÁI HIỆN bug (phải FAIL trước khi fix)
         trước khi sửa code
 - [ ] **T4** — Review chéo + cập nhật `specs/<module>.md` khi merge
+      - Nếu ticket thêm/xoá endpoint: thêm 1 dòng vào `specs/api-catalog.md`
 - [ ] **T5** — Verify trước khi archive: tất cả checkbox trên đã tick, và
       mọi mục trong `delta-spec.md` đã fold vào đúng file `specs/` — TRỪ
       mục 1d (regression guard) không fold (xem CLAUDE.md mục 4) — chưa
